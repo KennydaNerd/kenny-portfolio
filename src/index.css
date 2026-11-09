@@ -1,0 +1,19 @@
+@tailwind base; @tailwind components; @tailwind utilities;
+html { scroll-behavior: smooth; }
+body { @apply bg-obsidian text-rose-50 font-display antialiased; }
+.glass { @apply bg-white/[0.04] backdrop-blur-xl border border-rose/20 rounded-3xl; }
+.glass:hover { box-shadow: 0 0 40px -12px #ec4899aa; }
+.prism-border { background: linear-gradient(#12050b,#12050b) padding-box, linear-gradient(135deg,#ef4444,#ec4899,#8b5cf6,#3b82f6) border-box; border: 2px solid transparent; }
+.flip { perspective: 1200px; }
+.flip-inner { transform-style: preserve-3d; transition: transform .8s cubic-bezier(.2,.8,.2,1); }
+.flip-inner.on { transform: rotateY(180deg); }
+.face { backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.back { transform: rotateY(180deg); }
+@keyframes sway { 0%,100% { transform: rotate(-2.5deg); } 50% { transform: rotate(2.5deg); } }
+.sway { transform-origin: top center; animation: sway 6s ease-in-out infinite; }
+:focus-visible { outline: 2px solid #ec4899; outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) { .sway { animation: none; } * { transition-duration: .01ms !important; } }
+.shoot { position: absolute; width: 120px; height: 2px; background: linear-gradient(90deg,#fff,transparent); opacity: 0; transform: rotate(35deg); animation: shoot 14s linear infinite; }
+@keyframes shoot { 0% { opacity: 0; translate: 0 0; } 2% { opacity: 1; } 8% { opacity: 0; translate: 320px 220px; } 100% { opacity: 0; } }
+body.lite .stars { display: none; }
+html, body { overflow-x: hidden; }
