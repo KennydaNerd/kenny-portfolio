@@ -7,6 +7,12 @@ import { Boot, Badge, Toasts, Stars, GhRepos, toast } from './extras.jsx'
 /* ---------- DATA ---------- */
 const ME = { name: 'Kgothatso Kenny Manyaka', email: 'manyakakgothatso7@gmail.com', phone: '+27 66 055 3889',
   gh: 'https://github.com/KennydaNerd', li: 'https://linkedin.com/in/kgothatso-manyaka-00036627b', loc: 'Pretoria / Johannesburg, South Africa' }
+const ABOUT = [
+  'I build web applications and I test them, because working software means proving that it works. As a Junior Software Developer and QA tester, I work in React, JavaScript and Python, with FastAPI, SQLite and Pytest behind the projects on this site.',
+  'I completed Full Stack Developer training through FNB App Academy / IT Varsity (NQF Level 5), alongside WeThinkCode_ and CAPACITI programmes, Google AI Essentials and Oracle Cloud Infrastructure Foundations. I have applied that training to real projects: a full-stack salon platform with JWT authentication and an automated Pytest suite, a support ticket tracker and an interactive IT troubleshooter.',
+  'Before moving into technology, I worked in administration and legal administration. It trained me in clear communication, precision, organisation and taking responsibility for detail. Those habits now show up in how I write code, document it and report issues.',
+  'I am looking for a junior role in software development, QA or IT support where I can contribute from day one and keep learning from experienced engineers.',
+]
 const ROLES = ['Full-Stack Developer', 'QA & Test Engineer', 'Creative Web Designer', 'Problem Solver', 'WeThinkCode_ Alumni']
 const SKILLS = {
   Frontend: [['React.js', 90], ['JavaScript ES6+', 85], ['Tailwind CSS', 88], ['HTML5 / CSS3', 92], ['Vite', 80]],
@@ -81,7 +87,7 @@ function CLI({ open, setOpen }) {
     const k = cmd.trim().toLowerCase(), skills = Object.entries(SKILLS).map(([g, a]) => `${g}: ${a.map(s => s[0]).join(', ')}`)
     const out = {
       help: ['help, whoami, skills, projects, resumes, contact, hire, clear'],
-      whoami: [`${ME.name}`, 'Junior Software Developer (React & Python) and Junior IT Support / QA Tester', ME.loc],
+      whoami: [ME.name, 'Junior Software Developer, QA Tester and IT Support', 'React, JavaScript, Python, FastAPI, Pytest', 'FNB App Academy / IT Varsity (NQF 5), Google AI Essentials, Oracle OCI', 'Background in administration and legal administration: communication, precision, ownership.', 'Open to junior dev, QA and IT support roles.', ME.loc],
       skills, projects: PROJECTS.map(p => `${p.t} [${p.s.join(', ')}]`),
       resumes: Object.entries(RESUMES).map(([n, r]) => `${n}: ${r.file}`),
       contact: [ME.email, ME.phone, ME.gh, ME.li],
@@ -111,12 +117,18 @@ function CLI({ open, setOpen }) {
 /* ---------- SECTIONS ---------- */
 const Section = ({ id, title, children }) => <section id={id} className="max-w-6xl mx-auto px-5 py-16 md:py-24"><h2 className="text-3xl md:text-4xl font-extrabold mb-10 text-center md:text-left">{title}</h2>{children}</section>
 
+function About() {
+  return <Section id="about" title="About me">
+    <div className="glass p-6 md:p-10 space-y-5 text-rose-100/80 leading-relaxed max-w-3xl mx-auto md:mx-0">{ABOUT.map(p => <p key={p}>{p}</p>)}</div>
+  </Section>
+}
+
 function Skills() {
   const [tab, setTab] = useState(Object.keys(SKILLS)[0])
   return <Section id="skills" title="Skills">
     <div className="flex flex-wrap justify-center md:justify-start gap-2 mb-6" role="tablist">{Object.keys(SKILLS).map(k => <button key={k} role="tab" aria-selected={tab === k} onClick={() => setTab(k)}
       className={`px-4 py-2 rounded-full text-sm border transition ${tab === k ? 'bg-rose text-black border-rose font-semibold' : 'border-rose/30 hover:bg-rose/10'}`}>{k}</button>)}</div>
-      <div className="glass p-8 flex flex-wrap justify-center md:justify-start gap-3">{SKILLS[tab].map(([n]) => <span key={n} className="px-4 py-2 rounded-full border border-rose/30 bg-rose/10 text-sm shadow-[0_0_14px_-6px_#ec4899]">{n}</span>)}</div>
+    <div className="glass p-8 flex flex-wrap justify-center md:justify-start gap-3">{SKILLS[tab].map(([n]) => <span key={n} className="px-4 py-2 rounded-full border border-rose/30 bg-rose/10 text-sm shadow-[0_0_14px_-6px_#ec4899]">{n}</span>)}</div>
   </Section>
 }
 
@@ -180,12 +192,12 @@ function Contact() {
   const cls = 'w-full bg-white/5 border border-rose/20 rounded-2xl px-4 py-3 outline-none focus:border-rose'
   return <Section id="contact" title="Hire me">
     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-    <form onSubmit={submit} noValidate className="glass p-6 md:p-8 space-y-4 min-w-0">
+      <form onSubmit={submit} noValidate className="glass p-6 md:p-8 space-y-4 min-w-0">
         {[['name', 'Your name'], ['email', 'Your email']].map(([k, p]) => <div key={k}><input aria-label={p} placeholder={p} value={f[k]} onChange={e => setF({ ...f, [k]: e.target.value })} className={cls} />{err[k] && <p className="text-crimson text-xs mt-1">{err[k]}</p>}</div>)}
         <div><textarea aria-label="Message" rows="4" placeholder="Tell me about the role" value={f.msg} onChange={e => setF({ ...f, msg: e.target.value })} className={cls} />{err.msg && <p className="text-crimson text-xs mt-1">{err.msg}</p>}</div>
         <button className="px-6 py-3 rounded-full bg-gradient-to-r from-velvet to-rose font-semibold flex items-center gap-2"><Send size={16} />Send message</button>
         {sent && <p className="text-sm text-emerald-300">Your email app should open with the message ready to send.</p>}</form>
-        <div className="glass p-6 md:p-8 space-y-4 min-w-0">{[[Mail, ME.email, `mailto:${ME.email}`], [Phone, ME.phone, `tel:${ME.phone.replace(/\s/g, '')}`], [Github, 'github.com/KennydaNerd', ME.gh], [Linkedin, 'LinkedIn profile', ME.li]].map(([I, t, h]) =>
+      <div className="glass p-6 md:p-8 space-y-4 min-w-0">{[[Mail, ME.email, `mailto:${ME.email}`], [Phone, ME.phone, `tel:${ME.phone.replace(/\s/g, '')}`], [Github, 'github.com/KennydaNerd', ME.gh], [Linkedin, 'LinkedIn profile', ME.li]].map(([I, t, h]) =>
         <a key={t} href={h} target="_blank" rel="noreferrer" className="flex items-center gap-3 p-3 rounded-2xl border border-rose/20 hover:bg-rose/10 transition"><I className="text-rose shrink-0" size={20} /><span className="min-w-0 break-all">{t}</span></a>)}
         <p className="flex items-center gap-2 text-sm text-rose-100/60 pt-2"><MapPin size={16} />{ME.loc}</p></div></div>
   </Section>
@@ -201,10 +213,10 @@ export default function App() {
   return <>
     <AnimatePresence>{boot && <Boot done={finish} />}</AnimatePresence><Toasts /><Stars /><Cosmos />
     <header className="fixed top-0 inset-x-0 z-40 backdrop-blur-xl bg-obsidian/50 border-b border-rose/10"><nav className="max-w-6xl mx-auto px-5 h-14 flex items-center justify-between text-sm">
-      <a href="#top" className="font-bold">KM</a><div className="hidden sm:flex gap-6">{['skills', 'projects', 'resumes', 'certificates', 'journey', 'contact'].map(s => <a key={s} href={`#${s}`} className="hover:text-rose capitalize">{s}</a>)}</div></nav></header>
+      <a href="#top" className="font-bold">KM</a><div className="hidden sm:flex gap-6">{['about', 'skills', 'projects', 'resumes', 'certificates', 'journey', 'contact'].map(s => <a key={s} href={`#${s}`} className="hover:text-rose capitalize">{s}</a>)}</div></nav></header>
     <main id="top">
       <section className="min-h-screen max-w-6xl mx-auto px-5 pt-20 grid md:grid-cols-2 items-center gap-10">
-      <div className="order-2 md:order-1 space-y-5 text-center md:text-left flex flex-col items-center md:items-start">
+        <div className="order-2 md:order-1 space-y-5 text-center md:text-left flex flex-col items-center md:items-start">
           <h1 className="text-4xl md:text-6xl font-extrabold leading-[1.05]">Hi, I'm <span className="bg-gradient-to-r from-crimson via-rose to-violet-400 bg-clip-text text-transparent">Kgothatso Kenny Manyaka</span></h1>
           <Typist />
           <p className="text-rose-100/70 max-w-md">Junior Software Developer (React & Python) and Junior IT Support / QA Tester based in Pretoria and Johannesburg.</p>
@@ -213,7 +225,7 @@ export default function App() {
         </div>
         <div className="order-1 md:order-2 flex justify-center"><Badge loc={ME.loc} /></div>
       </section>
-      <Skills /><Projects /><GhRepos /><Resumes /><Certs /><Timeline /><Contact />
+      <About /><Skills /><Projects /><GhRepos /><Resumes /><Certs /><Timeline /><Contact />
     </main>
     <footer className="text-center text-xs text-rose-100/40 py-10">© 2026 {ME.name}</footer>
     <button onClick={() => setCli(o => !o)} aria-label="Toggle CLI shell (Ctrl + ~)" className="fixed bottom-6 right-4 z-50 flex items-center gap-2 px-5 py-3 rounded-full bg-gradient-to-r from-velvet to-rose font-mono text-sm shadow-[0_0_30px_#ec489988]"><Terminal size={18} />CLI Shell</button>
