@@ -1,40 +1,42 @@
 import { useEffect, useRef, useState } from 'react'
 import * as THREE from 'three'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Terminal, Mail, Phone, Github, Linkedin, Download, X, ExternalLink, Code2, MapPin, Send, Eye, Award } from 'lucide-react'
-import { Boot, Badge, Toasts, Stars, GhRepos, toast } from './extras.jsx'
+import { Terminal, Mail, Phone, Github, Linkedin, Download, X, ExternalLink, Code2, MapPin, Send, Eye, Award, Menu } from 'lucide-react'
+import { Badge, Toasts, Stars, GhRepos, toast } from './extras.jsx'
 
 /* ---------- DATA ---------- */
 const ME = { name: 'Kgothatso Kenny Manyaka', email: 'manyakakgothatso7@gmail.com', phone: '+27 66 055 3889',
   gh: 'https://github.com/KennydaNerd', li: 'https://linkedin.com/in/kgothatso-manyaka-00036627b', loc: 'Pretoria / Johannesburg, South Africa' }
+// [text, shownOnPhoneByDefault]
 const ABOUT = [
-  'I build web applications and I test them, because working software means proving that it works. As a Junior Software Developer and QA tester, I work in React, JavaScript and Python, with FastAPI, SQLite and Pytest behind the projects on this site.',
-  'I completed Full Stack Developer training through FNB App Academy / IT Varsity (NQF Level 5), alongside WeThinkCode_ and CAPACITI programmes, Google AI Essentials and Oracle Cloud Infrastructure Foundations. I have applied that training to real projects: a full-stack salon platform with JWT authentication and an automated Pytest suite, a support ticket tracker and an interactive IT troubleshooter.',
-  'Before moving into technology, I worked in administration and legal administration. It trained me in clear communication, precision, organisation and taking responsibility for detail. Those habits now show up in how I write code, document it and report issues.',
-  'I am looking for a junior role in software development, QA or IT support where I can contribute from day one and keep learning from experienced engineers.',
+  ['I build web applications and I test them, because working software means proving that it works. I am a Junior Software Developer and QA tester working with React, Python, FastAPI and Pytest.', true],
+  ['I completed Full Stack Developer training through FNB App Academy / IT Varsity (NQF Level 5), alongside WeThinkCode_, CAPACITI, Google AI Essentials and Oracle Cloud Infrastructure Foundations. I have applied it to real projects, including a full-stack salon platform with JWT authentication and an automated Pytest suite.', false],
+  ['Before moving into technology I worked in administration and legal administration. It trained me in clear communication, precision and taking responsibility for detail. Those habits show up in how I write code, document it and report issues.', false],
+  ['I am looking for a junior role in software development, QA or IT support where I can contribute from day one and keep learning from experienced engineers.', true],
 ]
 const ROLES = ['Full-Stack Developer', 'QA & Test Engineer', 'Creative Web Designer', 'Problem Solver', 'WeThinkCode_ Alumni']
 const SKILLS = {
-  Frontend: [['React.js', 90], ['JavaScript ES6+', 85], ['Tailwind CSS', 88], ['HTML5 / CSS3', 92], ['Vite', 80]],
-  'Backend & Database': [['Python', 85], ['FastAPI', 82], ['REST APIs', 85], ['Pydantic', 78], ['SQL / SQLite', 76]],
-  'QA & Testing': [['Pytest', 84], ['FastAPI TestClient', 80], ['Manual API Testing', 86], ['Browser DevTools', 88], ['Swagger UI', 82]],
-  'Cloud & DevOps': [['Git / GitHub', 88], ['Vercel', 85], ['Render', 78], ['JWT / PBKDF2', 76], ['LocalStorage API', 85]],
+  Frontend: ['React.js', 'React Hooks', 'JavaScript ES6+', 'HTML5', 'CSS3 (Grid & Flexbox)', 'Tailwind CSS', 'Vite', 'Responsive Design', 'DOM Manipulation', 'Form Validation', 'Accessibility Basics'],
+  'Backend & Database': ['Python', 'FastAPI', 'REST APIs', 'Pydantic', 'SQLite', 'SQL', 'JWT Authentication', 'PBKDF2 Password Hashing', 'CRUD Operations', 'File Uploads'],
+  'QA & Testing': ['Pytest', 'FastAPI TestClient', 'Manual API Testing', 'Swagger UI', 'Browser DevTools', 'Debugging', 'Test Case Design'],
+  'Tools & Deployment': ['Git', 'GitHub', 'Vercel', 'Render', 'VS Code', 'npm', 'Environment Variables', 'LocalStorage API', 'WhatsApp Click-to-Chat Links'],
 }
 const PROJECTS = [
-  { t: 'Full-Stack Salon & Hair Retail Platform', d: 'Booking and retail platform with JWT auth, a FastAPI backend and a React storefront.', s: ['React', 'FastAPI', 'Pytest', 'JWT', 'SQLite', 'Vercel', 'Render'], note: 'Automated API test suite: 9 Pytest cases', case: ['JWT login with PBKDF2-hashed passwords', 'FastAPI REST endpoints backed by SQLite', '9 Pytest cases run through FastAPI TestClient', 'React frontend on Vercel, API on Render'], live: 'https://frontend-inky-three-34.vercel.app', src: 'https://github.com/KennydaNerd/hair-by-neo' },
-  { t: 'Support Ticket Tracker', d: 'Create, filter and close support tickets. Data persists in the browser.', s: ['React', 'Vite', 'LocalStorage', 'Vercel'], live: 'https://support-ticket-tracker-vert.vercel.app', src: 'https://github.com/KennydaNerd/support-ticket-tracker' },
-  { t: 'Interactive IT Troubleshooter', d: 'A decision tree that walks users through common IT faults to a fix.', s: ['Vanilla JS', 'DOM'], live: 'https://it-troubleshooter.vercel.app', src: ME.gh },
+  { t: 'Full-Stack Salon & Hair Retail Platform', d: 'Booking and retail platform with a React storefront, FastAPI backend and admin dashboard.', s: ['React', 'Vite', 'Python', 'FastAPI', 'Pydantic', 'SQLite', 'JWT', 'PBKDF2', 'Pytest', 'REST API', 'Vercel', 'Render'],
+    h: ['Booking requests stay pending until the owner responds', 'JWT-protected admin for appointments, products and gallery'], note: 'Automated API test suite: 9 Pytest cases', case: ['JWT login with PBKDF2-hashed passwords', 'FastAPI REST endpoints backed by SQLite', '9 Pytest cases run through FastAPI TestClient', 'React frontend on Vercel, API on Render'], live: 'https://frontend-inky-three-34.vercel.app', src: 'https://github.com/KennydaNerd/hair-by-neo' },
+  { t: 'Support Ticket Tracker', d: 'Create and manage support tickets in a clean React interface.', s: ['React', 'Vite', 'JavaScript', 'LocalStorage API', 'Vercel'], h: ['Tickets persist in the browser between visits', 'Built with React components and hooks'], live: 'https://support-ticket-tracker-vert.vercel.app', src: 'https://github.com/KennydaNerd/support-ticket-tracker' },
+  { t: 'Interactive IT Troubleshooter', d: 'A decision tree that walks users through common IT faults to a fix.', s: ['Vanilla JavaScript', 'DOM Manipulation', 'Decision Tree', 'HTML5', 'CSS3', 'Vercel'], h: ['Step-by-step guided troubleshooting flow', 'Plain JavaScript with no frameworks'], live: 'https://it-troubleshooter.vercel.app', src: ME.gh },
+  { t: 'Business Landing Page with WhatsApp Booking', d: 'Mobile-first landing page template for local beauty businesses.', s: ['HTML5', 'CSS3', 'JavaScript', 'IntersectionObserver', 'WhatsApp Click-to-Chat', 'Vercel'], h: ['Booking form opens WhatsApp with the message pre-filled', 'Form validation, mobile menu and reduced-motion support'], live: 'https://business-landing-page-smoky.vercel.app', src: ME.gh },
 ]
 const TIMELINE = [
   ['Oracle OCI Foundations', '2023', 'Cloud fundamentals certification'],
-  ['Google AI Essentials', '2024', 'Certification'],
+  ['Google AI Essentials', '2026', 'Certification'],
   ['WeThinkCode_', 'Bootcamp', 'Software Engineer programme'],
   ['FNB App Academy', 'Academy', 'Full Stack Academy'],
   ['CAPACITI', 'Accelerator', 'AI Skills Accelerator'],
-  ['Future Interns', 'Offer', 'Full Stack Web Development Intern'],
 ]
 const CERTS = [
-  { n: 'Google AI Essentials', by: 'Google', y: '2024', url: '' },
+  { n: 'Google AI Essentials', by: 'Google', y: '2026', url: '' },
   { n: 'OCI Foundations', by: 'Oracle Cloud Infrastructure', y: '2023', url: '' },
   { n: 'Software Engineer Bootcamp', by: 'WeThinkCode_', y: '', url: '' },
   { n: 'Full Stack Academy', by: 'FNB App Academy', y: '', url: '' },
@@ -84,7 +86,7 @@ function CLI({ open, setOpen }) {
   const [log, setLog] = useState([{ c: 'info', t: "Type 'help' to list commands." }]), [v, setV] = useState(''), end = useRef(), inp = useRef(), hist = useRef([]), idx = useRef(0)
   useEffect(() => { end.current?.scrollIntoView(); if (open) inp.current?.focus() }, [log, open])
   const run = cmd => { if (cmd.trim()) { hist.current.push(cmd); idx.current = hist.current.length }
-    const k = cmd.trim().toLowerCase(), skills = Object.entries(SKILLS).map(([g, a]) => `${g}: ${a.map(s => s[0]).join(', ')}`)
+    const k = cmd.trim().toLowerCase(), skills = Object.entries(SKILLS).map(([g, a]) => `${g}: ${a.join(', ')}`)
     const out = {
       help: ['help, whoami, skills, projects, resumes, contact, hire, clear'],
       whoami: [ME.name, 'Junior Software Developer, QA Tester and IT Support', 'React, JavaScript, Python, FastAPI, Pytest', 'FNB App Academy / IT Varsity (NQF 5), Google AI Essentials, Oracle OCI', 'Background in administration and legal administration: communication, precision, ownership.', 'Open to junior dev, QA and IT support roles.', ME.loc],
@@ -115,37 +117,42 @@ function CLI({ open, setOpen }) {
 }
 
 /* ---------- SECTIONS ---------- */
-const Section = ({ id, title, children }) => <section id={id} className="max-w-6xl mx-auto px-5 py-16 md:py-24"><h2 className="text-3xl md:text-4xl font-extrabold mb-10 text-center md:text-left">{title}</h2>{children}</section>
+const Section = ({ id, title, children }) => <section id={id} className="max-w-6xl mx-auto px-5 py-16 md:py-24 scroll-mt-14"><h2 className="text-3xl md:text-4xl font-extrabold mb-10 text-center">{title}</h2>{children}</section>
 
 function About() {
+  const [more, setMore] = useState(false)
   return <Section id="about" title="About me">
-    <div className="glass p-6 md:p-10 space-y-5 text-rose-100/80 leading-relaxed max-w-3xl mx-auto md:mx-0">{ABOUT.map(p => <p key={p}>{p}</p>)}</div>
+    <div className="glass p-6 md:p-10 max-w-3xl mx-auto space-y-4 text-center md:text-left text-rose-100/80 leading-relaxed">
+      {ABOUT.map(([p, core]) => <p key={p} className={core || more ? '' : 'hidden md:block'}>{p}</p>)}
+      <button onClick={() => setMore(m => !m)} className="md:hidden text-rose text-sm underline">{more ? 'Show less' : 'Read more'}</button>
+    </div>
   </Section>
 }
 
 function Skills() {
   const [tab, setTab] = useState(Object.keys(SKILLS)[0])
   return <Section id="skills" title="Skills">
-    <div className="flex flex-wrap justify-center md:justify-start gap-2 mb-6" role="tablist">{Object.keys(SKILLS).map(k => <button key={k} role="tab" aria-selected={tab === k} onClick={() => setTab(k)}
+    <div className="flex flex-wrap justify-center gap-2 mb-6" role="tablist">{Object.keys(SKILLS).map(k => <button key={k} role="tab" aria-selected={tab === k} onClick={() => setTab(k)}
       className={`px-4 py-2 rounded-full text-sm border transition ${tab === k ? 'bg-rose text-black border-rose font-semibold' : 'border-rose/30 hover:bg-rose/10'}`}>{k}</button>)}</div>
-    <div className="glass p-8 flex flex-wrap justify-center md:justify-start gap-3">{SKILLS[tab].map(([n]) => <span key={n} className="px-4 py-2 rounded-full border border-rose/30 bg-rose/10 text-sm shadow-[0_0_14px_-6px_#ec4899]">{n}</span>)}</div>
+    <div className="glass p-6 md:p-8 flex flex-wrap justify-center gap-3 max-w-4xl mx-auto">{SKILLS[tab].map(n => <span key={n} className="px-4 py-2 rounded-full border border-rose/30 bg-rose/10 text-sm shadow-[0_0_14px_-6px_#ec4899]">{n}</span>)}</div>
   </Section>
 }
 
 function Projects() {
   const [sel, setSel] = useState(null)
   return <Section id="projects" title="Projects">
-    <div className="grid md:grid-cols-3 gap-6">{PROJECTS.map(p => <article key={p.t} className="glass p-6 flex flex-col gap-4 transition">
+    <div className="grid md:grid-cols-2 gap-6">{PROJECTS.map(p => <article key={p.t} className="glass p-6 flex flex-col items-center text-center gap-4">
       <Code2 className="text-rose" /><h3 className="text-lg font-bold">{p.t}</h3><p className="text-sm text-rose-100/70">{p.d}</p>
       {p.note && <p className="text-xs rounded-xl bg-emerald-500/10 border border-emerald-400/30 p-2">{p.note}</p>}
-      <div className="flex flex-wrap gap-1.5">{p.s.map(s => <span key={s} className="text-xs font-mono px-2 py-1 rounded-md bg-rose/10 text-rose">{s}</span>)}</div>
-      <div className="mt-auto flex gap-3 text-sm pt-2">
+      <ul className="text-sm text-rose-100/80 space-y-1">{p.h.map(x => <li key={x}>{x}</li>)}</ul>
+      <div className="flex flex-wrap justify-center gap-1.5">{p.s.map(s => <span key={s} className="text-xs font-mono px-2 py-1 rounded-md bg-rose/10 text-rose">{s}</span>)}</div>
+      <div className="mt-auto flex flex-wrap justify-center gap-4 text-sm pt-2">
         <button onClick={() => setSel(p)} className="flex items-center gap-1 hover:text-rose"><Eye size={16} />Inspect</button>
         <a href={p.src} target="_blank" rel="noreferrer" className="flex items-center gap-1 hover:text-rose"><Github size={16} />Source</a>
         {p.live && <a href={p.live} target="_blank" rel="noreferrer" className="flex items-center gap-1 hover:text-rose"><ExternalLink size={16} />Live</a>}</div></article>)}</div>
     <AnimatePresence>{sel && <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm grid place-items-center p-5" onClick={() => setSel(null)}>
-      <div className="glass !bg-obsidian p-8 max-w-lg w-full" onClick={e => e.stopPropagation()} role="dialog" aria-label={sel.t}>
-        <div className="flex justify-between mb-4"><h3 className="text-xl font-bold">{sel.t}</h3><button onClick={() => setSel(null)} aria-label="Close"><X /></button></div>
+      <div className="glass !bg-obsidian p-6 md:p-8 max-w-lg w-full max-h-[85vh] overflow-y-auto" onClick={e => e.stopPropagation()} role="dialog" aria-label={sel.t}>
+        <div className="flex justify-between gap-4 mb-4"><h3 className="text-xl font-bold">{sel.t}</h3><button onClick={() => setSel(null)} aria-label="Close"><X /></button></div>
         <p className="text-rose-100/80 mb-4">{sel.d}</p><p className="font-mono text-sm text-rose">{sel.s.join(' / ')}</p>{sel.note && <p className="mt-3 text-sm">{sel.note}</p>}{sel.case && <ul className="mt-4 space-y-1 text-sm text-rose-100/80">{sel.case.map(c => <li key={c}>• {c}</li>)}</ul>}</div></motion.div>}</AnimatePresence>
   </Section>
 }
@@ -153,9 +160,9 @@ function Projects() {
 function Resumes() {
   const [tab, setTab] = useState('Software Developer'), [modal, setModal] = useState(false), r = RESUMES[tab]
   return <Section id="resumes" title="Resumes">
-    <div className="glass p-8"><div className="flex gap-2 mb-6">{Object.keys(RESUMES).map(k => <button key={k} onClick={() => setTab(k)} className={`px-4 py-2 rounded-full text-sm border ${tab === k ? 'bg-rose text-black border-rose font-semibold' : 'border-rose/30'}`}>{k}</button>)}</div>
-      <ul className="space-y-2 mb-6 text-rose-100/80">{r.pts.map(p => <li key={p}>• {p}</li>)}</ul>
-      <div className="flex gap-3"><button onClick={() => setModal(true)} className="px-5 py-2.5 rounded-full border border-rose/40 hover:bg-rose/10 flex items-center gap-2"><Eye size={16} />Quick view</button>
+    <div className="glass p-6 md:p-8 max-w-2xl mx-auto text-center"><div className="flex flex-wrap justify-center gap-2 mb-6">{Object.keys(RESUMES).map(k => <button key={k} onClick={() => setTab(k)} className={`px-4 py-2 rounded-full text-sm border ${tab === k ? 'bg-rose text-black border-rose font-semibold' : 'border-rose/30'}`}>{k}</button>)}</div>
+      <ul className="space-y-2 mb-6 text-rose-100/80">{r.pts.map(p => <li key={p}>{p}</li>)}</ul>
+      <div className="flex flex-wrap justify-center gap-3"><button onClick={() => setModal(true)} className="px-5 py-2.5 rounded-full border border-rose/40 hover:bg-rose/10 flex items-center gap-2"><Eye size={16} />Quick view</button>
         <a href={r.file} download className="px-5 py-2.5 rounded-full bg-gradient-to-r from-velvet to-rose font-semibold flex items-center gap-2"><Download size={16} />Download PDF</a></div></div>
     {modal && <div className="fixed inset-0 z-50 bg-black/80 p-4 flex flex-col" onClick={() => setModal(false)}><button className="self-end mb-2" aria-label="Close"><X /></button>
       <iframe src={r.file} title={`${tab} resume`} className="flex-1 w-full rounded-2xl bg-white" onClick={e => e.stopPropagation()} /></div>}
@@ -164,7 +171,7 @@ function Resumes() {
 
 function Certs() {
   return <Section id="certificates" title="Certificates">
-    <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">{CERTS.map(c => <article key={c.n} className="glass p-6 flex flex-col gap-2">
+    <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">{CERTS.map(c => <article key={c.n} className="glass p-6 flex flex-col items-center text-center gap-2">
       <Award className="text-rose" /><h3 className="font-bold">{c.n}</h3><p className="text-sm text-rose-100/70">{c.by}{c.y && ` · ${c.y}`}</p>
       {c.url && <a href={c.url} target="_blank" rel="noreferrer" className="mt-2 text-sm flex items-center gap-1 hover:text-rose"><ExternalLink size={16} />View credential</a>}</article>)}</div>
   </Section>
@@ -174,7 +181,7 @@ function Timeline() {
   return <Section id="journey" title="Career skill tree">
     <div className="relative">
       <div className="absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-rose via-crimson to-velvet hidden md:block" />
-      <ol className="space-y-8">{TIMELINE.map(([t, d, s], i) => <li key={t} className={`md:w-1/2 relative ${i % 2 ? 'md:ml-auto md:pl-10' : 'md:pr-10 md:text-right'}`}>
+      <ol className="space-y-6 md:space-y-8">{TIMELINE.map(([t, d, s], i) => <li key={t} className={`md:w-1/2 relative text-center ${i % 2 ? 'md:ml-auto md:pl-10 md:text-left' : 'md:pr-10 md:text-right'}`}>
         <span className={`hidden md:block absolute top-6 w-10 h-0.5 bg-rose/50 ${i % 2 ? 'left-0' : 'right-0'}`} />
         <span className={`hidden md:block absolute top-[1.15rem] w-4 h-4 rounded-full bg-rose shadow-[0_0_16px_#ec4899] ${i % 2 ? '-left-2' : '-right-2'}`} />
         <div className="glass p-5"><p className="font-mono text-xs text-rose">Tier {i + 1} · {d}</p><p className="font-bold mt-1">{t}</p><p className="text-sm text-rose-100/70">{s}</p></div></li>)}</ol></div>
@@ -190,37 +197,42 @@ function Contact() {
     setErr(x); if (Object.keys(x).length) return
     location.href = `mailto:${ME.email}?subject=${encodeURIComponent('Portfolio enquiry from ' + f.name)}&body=${encodeURIComponent(f.msg + '\n\n' + f.name + ' (' + f.email + ')')}`; setSent(true) }
   const cls = 'w-full bg-white/5 border border-rose/20 rounded-2xl px-4 py-3 outline-none focus:border-rose'
+  const tiles = [[Mail, 'Email me', ME.email, `mailto:${ME.email}`], [Phone, 'Call me', ME.phone, `tel:${ME.phone.replace(/\s/g, '')}`], [Github, 'GitHub', 'github.com/KennydaNerd', ME.gh], [Linkedin, 'LinkedIn', 'Connect with me', ME.li]]
   return <Section id="contact" title="Hire me">
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
       <form onSubmit={submit} noValidate className="glass p-6 md:p-8 space-y-4 min-w-0">
         {[['name', 'Your name'], ['email', 'Your email']].map(([k, p]) => <div key={k}><input aria-label={p} placeholder={p} value={f[k]} onChange={e => setF({ ...f, [k]: e.target.value })} className={cls} />{err[k] && <p className="text-crimson text-xs mt-1">{err[k]}</p>}</div>)}
         <div><textarea aria-label="Message" rows="4" placeholder="Tell me about the role" value={f.msg} onChange={e => setF({ ...f, msg: e.target.value })} className={cls} />{err.msg && <p className="text-crimson text-xs mt-1">{err.msg}</p>}</div>
-        <button className="px-6 py-3 rounded-full bg-gradient-to-r from-velvet to-rose font-semibold flex items-center gap-2"><Send size={16} />Send message</button>
-        {sent && <p className="text-sm text-emerald-300">Your email app should open with the message ready to send.</p>}</form>
-      <div className="glass p-6 md:p-8 space-y-4 min-w-0">{[[Mail, ME.email, `mailto:${ME.email}`], [Phone, ME.phone, `tel:${ME.phone.replace(/\s/g, '')}`], [Github, 'github.com/KennydaNerd', ME.gh], [Linkedin, 'LinkedIn profile', ME.li]].map(([I, t, h]) =>
-        <a key={t} href={h} target="_blank" rel="noreferrer" className="flex items-center gap-3 p-3 rounded-2xl border border-rose/20 hover:bg-rose/10 transition"><I className="text-rose shrink-0" size={20} /><span className="min-w-0 break-all">{t}</span></a>)}
-        <p className="flex items-center gap-2 text-sm text-rose-100/60 pt-2"><MapPin size={16} />{ME.loc}</p></div></div>
+        <button className="w-full md:w-fit md:mx-auto px-8 py-3 rounded-full bg-gradient-to-r from-velvet to-rose font-semibold flex items-center justify-center gap-2"><Send size={16} />Send message</button>
+        {sent && <p className="text-sm text-emerald-300 text-center">Your email app should open with the message ready to send.</p>}</form>
+      <div className="glass p-6 md:p-8 space-y-3 min-w-0">{tiles.map(([I, l, t, h]) =>
+        <a key={l} href={h} target="_blank" rel="noreferrer" className="flex items-center gap-4 p-4 rounded-2xl border border-rose/20 hover:bg-rose/10 transition">
+          <I className="text-rose shrink-0" size={22} /><span className="min-w-0 text-left"><span className="block font-semibold">{l}</span><span className="block text-xs text-rose-100/60 [overflow-wrap:anywhere]">{t}</span></span></a>)}
+        <p className="flex items-center justify-center gap-2 text-sm text-rose-100/60 pt-2"><MapPin size={16} />{ME.loc}</p></div></div>
   </Section>
 }
 
 /* ---------- APP ---------- */
+const NAV = ['about', 'skills', 'projects', 'resumes', 'certificates', 'journey', 'contact']
 export default function App() {
-  const [cli, setCli] = useState(false), [lite, setLite] = useState(() => matchMedia('(max-width: 768px), (pointer: coarse)').matches), [boot, setBoot] = useState(false)
-  const finish = () => { try { sessionStorage.setItem('booted', '1') } catch {} setBoot(false) }
+  const [cli, setCli] = useState(false), [menu, setMenu] = useState(false), [lite, setLite] = useState(() => matchMedia('(max-width: 768px), (pointer: coarse)').matches)
   useEffect(() => { document.body.classList.toggle('lite', lite) }, [lite])
   useEffect(() => { if (cli) toast('Terminal opened') }, [cli])
-  useEffect(() => { const k = e => { if (e.ctrlKey && (e.key === '`' || e.key === '~')) { e.preventDefault(); setCli(o => !o) } else if (e.key === 'Escape') setCli(false) }; addEventListener('keydown', k); return () => removeEventListener('keydown', k) }, [])
+  useEffect(() => { const k = e => { if (e.ctrlKey && (e.key === '`' || e.key === '~')) { e.preventDefault(); setCli(o => !o) } else if (e.key === 'Escape') { setCli(false); setMenu(false) } }; addEventListener('keydown', k); return () => removeEventListener('keydown', k) }, [])
   return <>
-    <AnimatePresence>{boot && <Boot done={finish} />}</AnimatePresence><Toasts /><Stars /><Cosmos />
-    <header className="fixed top-0 inset-x-0 z-40 backdrop-blur-xl bg-obsidian/50 border-b border-rose/10"><nav className="max-w-6xl mx-auto px-5 h-14 flex items-center justify-between text-sm">
-      <a href="#top" className="font-bold">KM</a><div className="hidden sm:flex gap-6">{['about', 'skills', 'projects', 'resumes', 'certificates', 'journey', 'contact'].map(s => <a key={s} href={`#${s}`} className="hover:text-rose capitalize">{s}</a>)}</div></nav></header>
+    <Toasts /><Stars /><Cosmos />
+    <header className="fixed top-0 inset-x-0 z-40 backdrop-blur-xl bg-obsidian/60 border-b border-rose/10"><nav className="max-w-6xl mx-auto px-5 h-14 flex items-center justify-between text-sm">
+      <a href="#top" className="font-bold">KM</a>
+      <div className="hidden md:flex gap-6">{NAV.map(s => <a key={s} href={`#${s}`} className="hover:text-rose capitalize">{s}</a>)}</div>
+      <button className="md:hidden p-1" onClick={() => setMenu(m => !m)} aria-label="Menu" aria-expanded={menu}>{menu ? <X /> : <Menu />}</button></nav>
+      {menu && <div className="md:hidden glass !rounded-none !border-x-0 !border-t-0 py-2 flex flex-col text-center">{NAV.map(s => <a key={s} href={`#${s}`} onClick={() => setMenu(false)} className="py-3 capitalize hover:text-rose">{s}</a>)}</div>}</header>
     <main id="top">
       <section className="min-h-screen max-w-6xl mx-auto px-5 pt-20 grid md:grid-cols-2 items-center gap-10">
-        <div className="order-2 md:order-1 space-y-5 text-center md:text-left flex flex-col items-center md:items-start">
+        <div className="order-2 md:order-1 space-y-5 text-center flex flex-col items-center">
           <h1 className="text-4xl md:text-6xl font-extrabold leading-[1.05]">Hi, I'm <span className="bg-gradient-to-r from-crimson via-rose to-violet-400 bg-clip-text text-transparent">Kgothatso Kenny Manyaka</span></h1>
           <Typist />
           <p className="text-rose-100/70 max-w-md">Junior Software Developer (React & Python) and Junior IT Support / QA Tester based in Pretoria and Johannesburg.</p>
-          <div className="flex flex-wrap justify-center md:justify-start gap-3 pt-2"><a href="/resumes/Kenny-Manyaka-Software-Developer.pdf" download className="px-6 py-3 rounded-full bg-gradient-to-r from-velvet to-rose font-semibold">Download CV</a>
+          <div className="flex flex-wrap justify-center gap-3 pt-2"><a href="/resumes/Kenny-Manyaka-Software-Developer.pdf" download className="px-6 py-3 rounded-full bg-gradient-to-r from-velvet to-rose font-semibold">Download CV</a>
             <a href="#projects" className="px-6 py-3 rounded-full border border-rose/40 hover:bg-rose/10">View projects</a></div>
         </div>
         <div className="order-1 md:order-2 flex justify-center"><Badge loc={ME.loc} /></div>
@@ -228,8 +240,8 @@ export default function App() {
       <About /><Skills /><Projects /><GhRepos /><Resumes /><Certs /><Timeline /><Contact />
     </main>
     <footer className="text-center text-xs text-rose-100/40 py-10">© 2026 {ME.name}</footer>
-    <button onClick={() => setCli(o => !o)} aria-label="Toggle CLI shell (Ctrl + ~)" className="fixed bottom-6 right-4 z-50 flex items-center gap-2 px-5 py-3 rounded-full bg-gradient-to-r from-velvet to-rose font-mono text-sm shadow-[0_0_30px_#ec489988]"><Terminal size={18} />CLI Shell</button>
-    <button onClick={() => setLite(l => !l)} aria-pressed={lite} className="fixed bottom-6 left-4 z-50 px-4 py-2 rounded-full glass !rounded-full text-xs font-mono">Effects: {lite ? 'off' : 'on'}</button>
+    <button onClick={() => setCli(o => !o)} aria-label="Toggle CLI shell (Ctrl + ~)" className="fixed bottom-4 md:bottom-6 right-4 z-50 flex items-center gap-2 px-4 md:px-5 py-3 rounded-full bg-gradient-to-r from-velvet to-rose font-mono text-sm shadow-[0_0_30px_#ec489988]"><Terminal size={18} /><span className="hidden sm:inline">CLI Shell</span></button>
+    <button onClick={() => setLite(l => !l)} aria-pressed={lite} className="fixed bottom-4 md:bottom-6 left-4 z-50 px-3 py-2 glass !rounded-full text-xs font-mono">Effects: {lite ? 'off' : 'on'}</button>
     <CLI open={cli} setOpen={setCli} />
   </>
 }

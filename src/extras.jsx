@@ -13,39 +13,12 @@ export function Toasts() {
       <span className="text-rose">Achievement unlocked</span><br />{x.t}</motion.div>)}</AnimatePresence></div>
 }
 
-/* ---------- BOOT INTRO ---------- */
-const LINES = ['> initialising kenny.portfolio', '> loading cosmos ........ ok', '> mounting badge ......... ok', '> compiling skills ....... ok', '> status: available for hire']
-export function Boot({ done }) {
-  const [n, setN] = useState(0)
-  useEffect(() => { const t = setTimeout(n >= LINES.length ? done : () => setN(n + 1), n >= LINES.length ? 500 : 380); return () => clearTimeout(t) }, [n])
-  return <motion.div exit={{ opacity: 0 }} className="fixed inset-0 z-[100] bg-obsidian grid place-items-center p-6 font-mono text-sm text-rose">
-    <div className="w-full max-w-md space-y-1">{LINES.slice(0, n).map(l => <p key={l}>{l}</p>)}<span className="animate-pulse">█</span></div>
-    <button onClick={done} className="absolute bottom-8 right-6 text-xs text-rose-100/60 hover:text-rose underline">Skip</button></motion.div>
-}
-
 /* ---------- NEBULA + SHOOTING STARS ---------- */
 export function Stars() {
   return <div className="stars fixed inset-0 -z-[5] pointer-events-none overflow-hidden" aria-hidden>
     <div className="absolute -top-40 -left-40 w-[40rem] h-[40rem] rounded-full blur-3xl opacity-30" style={{ background: 'radial-gradient(circle,#800020,transparent 70%)' }} />
     <div className="absolute -bottom-40 -right-40 w-[36rem] h-[36rem] rounded-full blur-3xl opacity-25" style={{ background: 'radial-gradient(circle,#8b5cf6,transparent 70%)' }} />
     {[0, 1, 2].map(i => <span key={i} className="shoot" style={{ top: `${10 + i * 22}%`, left: `${30 + i * 25}%`, animationDelay: `${i * 4.5}s` }} />)}</div>
-}
-
-/* ---------- CURSOR TRAIL ---------- */
-export function Trail() {
-  const c = useRef()
-  useEffect(() => {
-    if (!matchMedia('(hover:hover)').matches) return
-    const cv = c.current, x = cv.getContext('2d'); let pts = [], raf
-    const rs = () => { cv.width = innerWidth; cv.height = innerHeight }; rs(); addEventListener('resize', rs)
-    const mm = e => pts.push({ x: e.clientX, y: e.clientY, l: 1 }); addEventListener('mousemove', mm)
-    const loop = () => { x.clearRect(0, 0, cv.width, cv.height)
-      if (document.body.classList.contains('lite')) pts = []
-      else { pts = pts.filter(p => p.l > 0.03); pts.forEach(p => { p.l *= 0.92; x.beginPath(); x.fillStyle = `rgba(236,72,153,${p.l * 0.6})`; x.arc(p.x, p.y, 4 * p.l, 0, 7); x.fill() }) }
-      raf = requestAnimationFrame(loop) }
-    loop(); return () => { cancelAnimationFrame(raf); removeEventListener('resize', rs); removeEventListener('mousemove', mm) }
-  }, [])
-  return <canvas ref={c} className="fixed inset-0 z-[45] pointer-events-none" aria-hidden />
 }
 
 /* ---------- PHYSICS BADGE + HOLO FOIL (mouse + phone tilt) ---------- */
@@ -106,8 +79,8 @@ export function GhRepos() {
   const [r, setR] = useState([])
   useEffect(() => { fetch('https://api.github.com/users/KennydaNerd/repos?sort=updated&per_page=6').then(x => (x.ok ? x.json() : [])).then(d => Array.isArray(d) && setR(d.filter(x => !x.fork))).catch(() => {}) }, [])
   if (!r.length) return null
-  return <section className="max-w-6xl mx-auto px-5 pb-16"><h3 className="text-xl font-bold mb-4">Latest on GitHub</h3>
-    <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">{r.map(x => <a key={x.id} href={x.html_url} target="_blank" rel="noreferrer" className="glass p-5 block">
-      <p className="font-semibold flex items-center gap-2"><Github size={16} className="text-rose" />{x.name}</p>
+  return <section className="max-w-6xl mx-auto px-5 pb-16"><h3 className="text-xl font-bold mb-6 text-center">Latest on GitHub</h3>
+    <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">{r.map(x => <a key={x.id} href={x.html_url} target="_blank" rel="noreferrer" className="glass p-5 block text-center">
+      <p className="font-semibold flex items-center justify-center gap-2"><Github size={16} className="text-rose" />{x.name}</p>
       <p className="text-sm text-rose-100/70 mt-2">{x.description || 'No description yet'}</p><p className="font-mono text-xs text-rose mt-3">{x.language || 'Mixed'}</p></a>)}</div></section>
 }
